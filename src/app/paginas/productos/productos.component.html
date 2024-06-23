@@ -1,0 +1,64 @@
+<div class="p-3 flex flex-wrap">
+
+    <div class="col-2">
+        <h4>Sub Categorias</h4>
+        <p-listbox 
+                [options]="(subCategorias$ | async)!" 
+                optionLabel="label" 
+                optionValue="value"
+                [formControl]="categoriasForm"
+            >
+                <ng-template let-sub pTemplate="item">
+                    <span>
+                        {{sub.label | titlecase}}
+                    </span>
+                </ng-template>
+            </p-listbox>
+    </div>
+    <div class="col-9">
+        <h2>{{paramCategoria$ | async | titlecase}}</h2>
+        <div class="grid">
+            @for (producto of productosFiltrados$ | async; track $index) {
+                <div class="col-12 md:col-6 lg:col-3">
+                    <div class="border-1 surface-border border-round m-2 p-3">
+                        <div class="mb-3">
+                            <div class="relative mx-auto">
+                                <img 
+                                    [src]="producto.imagen" 
+                                    [alt]="producto.nombre" 
+                                    class="w-full border-round" />
+                            </div>
+                        </div>
+                        <div class="mb-3 font-medium">
+                            <p-button [label]="producto.nombre" [link]="true" (onClick)="details(producto)"/>
+                        </div>
+                        <div class="flex justify-content-between align-items-center">
+                        <div class="mt-0">
+                            @if (producto.precioDescuento === null) {
+                                <div class="font-semibold text-xl">
+                                    {{ producto.precio | currency: '': 'symbol': '0.0-1' }}
+                                </div>
+                            }
+                            @else {
+                                <div>
+                                    <span class="line-through">
+                                        {{ producto.precio | currency: '': 'symbol': '0.0-1' }}
+                                    </span>
+                                    <span class="font-semibold text-xl text-green-600">
+                                        {{ producto.precioDescuento | currency: '': 'symbol': '0.0-1' }}
+                                    </span>
+                                </div>
+                            }
+                            
+                        </div>
+                            <span>
+                                <p-button icon="pi pi-shopping-cart" styleClass="ml-2" (onClick)="addToCart(producto)" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+    </div>
+</div>

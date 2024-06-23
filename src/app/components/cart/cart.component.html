@@ -1,0 +1,70 @@
+<p-sidebar  [visible]="abierto()" position="right" styleClass="w-30rem" (visibleChange)="handleVisibleChange($event)">
+    <ng-template pTemplate="headless">
+        <div class="flex flex-column h-full">
+
+            <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+                <span class="inline-flex align-items-center gap-2">
+                    <span class="font-semibold text-2xl text-primary">Tu Carrito</span>
+                </span>
+                <span>
+                    <p-button type="button" (click)="cerrarCarrito()" icon="pi pi-times" rounded="true" outlined="true" styleClass="h-2rem w-2rem"></p-button>
+                </span>
+            </div>
+
+            <div class="overflow-y-auto">
+                <p-dataView #dv [value]="cart()" emptyMessage="No hay productos">
+                    <ng-template pTemplate="list" let-products>
+                        <div class="grid grid-nogutter">
+                            @for (item of products; track item.id; let first = $first) {
+                                <div  class="col-12">
+                                    <div class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3" [ngClass]="{ 'border-top-1 surface-border': !first }">
+                                        <div class="md:w-6rem relative">
+                                            <img class="block xl:block mx-auto border-round w-full" [src]="item.producto.imagen" [alt]="item.producto.nombre" />
+                                        </div>
+                                        <div class="flex flex-column md:flex-row justify-content-between md:align-items-center flex-1 gap-4">
+                                            <div class="flex flex-row md:flex-column justify-content-between align-items-start gap-2">
+                                                <div>
+                                                    <span class="font-medium text-secondary text-sm">{{ item.producto.categoria | titlecase }}</span>
+                                                    <div class="text-md font-medium text-900 mt-2 mb-2">{{ item.producto.nombre }}</div>
+                                                    <div class="flex align-items-center gap-1">
+                                                        <p-button type="button" icon="pi pi-minus" rounded="true" styleClass="h-1rem w-1rem" (onClick)="disminuir(item)"></p-button>
+                                                        <span class="text-md font-medium text-900">{{item.cantidad}}</span>
+                                                        <p-button type="button" icon="pi pi-plus" rounded="true" styleClass="h-1rem w-1rem" (onClick)="aumentar(item)"></p-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-column gap-1 align-items-center justify-content-center">
+                                                @if (item.producto.precioDescuento === null) {
+                                                    <span class="text-lg font-semibold text-900">{{ item.subtotal | currency: '': 'symbol': '0.0-1'  }}</span>
+                                                }
+                                                @else {
+                                                    <span class="text-lg font-semibold text-green-600">{{ item.subtotal | currency: '': 'symbol': '0.0-1'  }}</span>
+                                                }
+                                                
+                                                <p-button icon="pi pi-trash" styleClass="h-2rem w-2rem"  severity="danger" (onClick)="quitarDelCarrito(item)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </ng-template>
+                </p-dataView>
+                
+            </div>
+
+            <div class="mt-auto">
+                <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
+                <div class="px-3">
+                    <div class="flex justify-content-end gap-5 mb-3">
+                        <span class="text-lg font-semibold text-900">TOTAL: </span>
+                        <span class="text-lg font-semibold text-900">{{ total() | currency: '': 'symbol': '0.0-1'  }}</span>
+                    </div>
+                    <button pButton pRipple label="CHECKOUT" [outlined]="true" class="p-button-success mb-3 w-full" (click)="checkout()" [disabled]="cantidadTotal() == 0"></button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    
+
+</p-sidebar>

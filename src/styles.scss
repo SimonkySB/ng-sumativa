@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeflex/primeflex.css";
+
+@import "primeng/resources/themes/mira/theme.css";
+@import "primeng/resources/primeng.css";
+
+@import "primeicons/primeicons.css";
+
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: var(--surface-50);
+}

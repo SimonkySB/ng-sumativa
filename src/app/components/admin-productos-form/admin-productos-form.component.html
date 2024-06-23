@@ -1,0 +1,97 @@
+<form [formGroup]="form" (ngSubmit)="guardar()">
+    <img 
+        [src]="producto?.imagen" 
+        [alt]="producto?.nombre"
+        width="150" 
+        class="block m-auto shadow-1" 
+    />
+    <div class="field">
+        <label>Imagen</label>
+        <input 
+            type="text" 
+            pInputText 
+            formControlName="imagen" 
+            />
+    </div>
+    <div class="field">
+        <label>Nombre</label>
+        <input 
+            type="text" 
+            pInputText 
+            formControlName="nombre" 
+            minlength="3"
+            maxlength="100"/>
+        @if (getError("nombre", "required")) {
+            <small class="text-red-700 font-medium">El campo es requerido</small>
+        }
+        @if (getError("nombre", "minlength")) {
+            <small class="text-red-700 font-medium">El campo es debe tener como mínimo 3 caracteres</small>
+        }
+        @if (getError("nombre", "maxlength")) {
+            <small class="text-red-700 font-medium">El campo es debe tener como máximo 100 caracteres</small>
+        }
+    </div>
+
+    <div class="field">
+        <label>Descripcion</label>
+        <textarea 
+            pInputTextarea 
+            formControlName="descripcion" 
+            maxlength="200"
+            rows="3" 
+            cols="20">
+        </textarea>
+        @if (getError("descripcion", "maxlength")) {
+            <small class="text-red-700 font-medium">El campo es debe tener como máximo 200 caracteres</small>
+        }
+    </div>
+
+    <div class="field">
+        <label class="mb-3">Categoría</label>
+        <div class="formgrid grid">
+            @for (cat of categorias(); track cat.id) {
+            <div class="field-radiobutton col-6">
+                <p-radioButton [id]="cat.id" [value]="cat.id" formControlName="categoriaId"
+                    (onClick)="handleCategoriaChange($event)" />
+                <label>{{cat.nombre | titlecase}}</label>
+            </div>
+            }
+        </div>
+    </div>
+    <div class="field">
+        <label class="mb-3">Sub Categoría</label>
+        <p-dropdown [options]="subcategorias()" formControlName="subcategoriaId" optionValue="id" optionLabel="nombre">
+            <ng-template let-data pTemplate="selectedItem">
+                {{ data.nombre | titlecase }}
+            </ng-template>
+            <ng-template let-data pTemplate="item">
+                {{ data.nombre | titlecase}}
+            </ng-template>
+        </p-dropdown>
+    </div>
+
+
+    <div class="formgrid grid">
+        <div class="field col">
+            <label for="price">Precio</label>
+            <p-inputNumber min="0" mode="currency" currency="CLP" locale="en-US" formControlName="precio" />
+            @if (getError("precio", "required")) {
+                <small class="text-red-700 font-medium">El campo es requerido</small>
+            }
+        </div>
+        <div class="field col">
+            <label for="price">Precio Descuento</label>
+            <p-inputNumber min="0" mode="currency" currency="CLP" locale="en-US" formControlName="precioDescuento" />
+        </div>
+    </div>
+
+    <div class="field mb-3">
+        <label for="quantity">Stock</label>
+        <p-inputNumber min="0" formControlName="stock"/>
+        @if (getError("stock", "required")) {
+            <small class="text-red-700 font-medium">El campo es requerido</small>
+        }
+    </div>
+
+    <p-button pRipple label="GUARDAR" icon="pi pi-check" type="submit" />
+</form>

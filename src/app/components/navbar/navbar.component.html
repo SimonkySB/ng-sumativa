@@ -1,0 +1,32 @@
+<div class="card">
+    <p-menubar [model]="items" styleClass="p-1">
+        <ng-template pTemplate="start">
+            <img width="70"  src="assets/images/logo.png" alt="" class="mr-2">
+        </ng-template>
+        <ng-template pTemplate="item" let-item let-root="root">
+            <a pRipple class="flex align-items-center p-menuitem-link" 
+                [routerLink]="item.routerLink" 
+                [routerLinkActiveOptions]="{exact: true}"
+                [routerLinkActive]="'p-menuitem-link-active'">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+                @if (item.items) {
+                    <i [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+                }
+            </a>
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-shopping-cart mr-4 link" pBadge style="font-size: 2rem" [value]="cartService.cantidadTotal()" (click)="cartService.verCarrito()"></i>
+                @if(authService.usuario$ | async; as user){
+                    <p-menu #menuUsuario [model]="userMenu" [popup]="true" />
+                    <p-button icon="pi pi-user" size="small" label="Bienvenid@" [text]="true" (click)="menuUsuario.toggle($event)"/>
+                }
+                @else{
+                    <button label="Iniciar Sesión" pButton pRipple class="p-menuitem-link" size="small" [outlined]="true" (click)="iniciarSesion()"></button>
+                    <button label="Registrarse" pButton pRipple class="p-menuitem-link" size="small" severity="danger" (click)="registrarse()"></button>
+                }
+            </div>
+        </ng-template>
+    </p-menubar>
+</div>

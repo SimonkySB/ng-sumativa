@@ -1,0 +1,19 @@
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="flex flex-column gap-2 mb-4">
+        <label >Email</label>
+        <input type="text" pInputText placeholder="ejemplo@email.com" formControlName="email"/>
+    </div>
+
+    <div class="flex flex-column gap-2 mb-3">
+        <label >Password</label>
+        <p-password inputStyleClass="w-full" styleClass="w-full" placeholder="**********" [feedback]="false" [toggleMask]="true" formControlName="password"/>
+    </div>
+
+    <div class="flex align-items-center justify-content-end mb-5">
+        <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer" (click)="recuperarPassword()">Forgot password?</a>
+    </div>
+
+    <p-button type="submit" label="Iniciar Sesión" styleClass="w-full" [disabled]="form.invalid"/>
+</form>

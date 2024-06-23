@@ -1,0 +1,23 @@
+
+
+@if (productosDestacados$ | async; as  productosDestacados) {
+    <div style="max-width: 1200px; margin-inline: auto;" class="pt-5">
+        <h2 class="ml-5 mt-0">Productos Destacados</h2>
+        <app-carousel-items 
+            [products]="productosDestacados"
+            (addToCartEvent)="handleAddToCartEvent($event)"
+            (detailEvent)="handleDetailEvent($event)"
+        />
+    </div>
+}
+
+@if (productosEnOferta$ | async; as  productosEnOferta) {
+    <div style="max-width: 1200px; margin-inline: auto;">
+        <h2 class="ml-5">Productos En Oferta</h2>
+        <app-carousel-items 
+            [products]="productosEnOferta"
+            (addToCartEvent)="handleAddToCartEvent($event)"
+            (detailEvent)="handleDetailEvent($event)"
+        />
+    </div>
+}

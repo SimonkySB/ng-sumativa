@@ -1,0 +1,91 @@
+<form [formGroup]="form" class="grid mt-2" (ngSubmit)="registrarse()">
+
+    <div class="col-12 md:col-6 mb-2">
+        <div class="flex flex-column gap-2">
+            <label for="email">Email</label>
+            <input 
+                placeholder="ejemplo@email.com"
+                pInputText 
+                formControlName="email"/>
+                @if (getError("email", "required")) {
+                    <small class="text-red-700 font-medium">El campo es requerido</small>
+                }
+                @if (getError("email", "email")) {
+                    <small class="text-red-700 font-medium">El email es inválido</small>
+                }
+        </div>
+    </div>
+    <div class="col-12 md:col-6 mb-2">
+        <div class="flex flex-column gap-2">
+            <label for="telefono">Teléfono</label>
+            <input 
+                placeholder="988765433"
+                pInputText 
+                formControlName="telefono"/>
+                @if (getError("telefono", "required")) {
+                    <small class="text-red-700 font-medium">El campo es requerido</small>
+                }
+                @if (getError("telefono", "pattern")) {
+                    <small class="text-red-700 font-medium">El teléfono es inválido</small>
+                }
+        </div>
+    </div>
+
+    
+
+    <div class="col-12 md:col-6 mb-2">
+        <div class="flex flex-column gap-2">
+            <label for="password">Contraseña</label>
+            <p-password 
+                placeholder="***********"
+                formControlName="password"
+                [toggleMask]="true"
+                inputStyleClass="w-full" 
+                styleClass="w-full"
+                [feedback]="false"
+                appendTo="body"/>
+                @if (getError("password", "required")) {
+                    <small class="text-red-700 font-medium">El campo es requerido</small>
+                }
+                @if (getError("password", "pattern")) {
+                    <small class="text-red-700 font-medium">
+                        Debe tener 1 letra minúscula, 1 letra mayúscula, 1 numero, 1 caracter especial y tener de 8 a 15 caracteres de largo
+                    </small>
+                }
+        </div>
+    </div>
+    <div class="col-12 md:col-6 mb-2">
+        <div class="flex flex-column gap-2">
+            <label for="passwordRepeat">Repetir Contraseña</label>
+            <p-password 
+                placeholder="***********"
+                formControlName="passwordRepeat"
+                [toggleMask]="true"
+                inputStyleClass="w-full" 
+                styleClass="w-full"
+                [feedback]="false"
+                appendTo="body"/>
+                @if (getError("passwordRepeat", "required")) {
+                    <small class="text-red-700 font-medium">El campo es requerido</small>
+                }
+                @else if (form.getError("passwordMatch")) {
+                    <small class="text-red-700 font-medium">
+                        Las contraseñas deben coincidir
+                    </small>
+                }
+        </div>
+    </div>
+    <div class="col-12 mb-4">
+        <div class="flex flex-column gap-2">
+            <label for="direccionDespacho">Dirección de despacho</label>
+            <input 
+                placeholder="Av. Paicaví 123 Depto. 13"
+                pInputText 
+                formControlName="direccionDespacho"/>
+        </div>
+    </div>
+   
+
+    <button pButton size="small" class="w-full" label="REGISTRARSE" [disabled]="form.invalid"></button>
+    
+</form>
