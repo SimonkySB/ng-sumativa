@@ -13,7 +13,7 @@ export class ProductService {
     private storage = inject(FirebaseService)
 
     private _productos = new BehaviorSubject<Product[]>([])
-    productos$ = this._productos.asObservable().pipe(
+    private productos$ = this._productos.asObservable().pipe(
         shareReplay(1)
     )
 

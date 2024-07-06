@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CurrencyPipe, TitleCasePipe } from '@angular/common';
-import { Subscription, combineLatest } from 'rxjs';
+import { Subscription, combineLatest, finalize } from 'rxjs';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +16,7 @@ import { AdminProductosFormComponent } from '../../components/admin-productos-fo
 import { CategoriaService } from '../../services/categoria.service';
 import { Categoria } from '../../models/categoria.model';
 import { Subcategoria } from '../../models/subcategoria.model';
+import { LoaderService } from '../../services/loader.service';
 
 
 @Component({
@@ -41,6 +42,7 @@ export default class AdminProductosComponent implements OnInit, OnDestroy {
   confirm = inject(ConfirmationService)
   dialogService = inject(DialogService)
   catService = inject(CategoriaService)
+  loader = inject(LoaderService)
 
   prodSub?: Subscription
   refForm?: DynamicDialogRef;
@@ -78,7 +80,10 @@ export default class AdminProductosComponent implements OnInit, OnDestroy {
         categorias: this.categorias,
         subcategorias: this.subcategorias,
         onsubmit: (product: Product) => {
-          this.productoService.guardarProducto(product).subscribe({
+          this.loader.show()
+          this.productoService.guardarProducto(product).pipe(
+            finalize(() => this.loader.hide())
+          ).subscribe({
             next: () => {
               this.message.add({ severity: "success", detail: "Producto registrado exitosamente" })
               this.refForm?.close();
@@ -102,7 +107,10 @@ export default class AdminProductosComponent implements OnInit, OnDestroy {
         subcategorias: this.subcategorias,
         product: product,
         onsubmit: (product: Product) => {
-          this.productoService.editarProducto(product).subscribe({
+          this.loader.show()
+          this.productoService.editarProducto(product).pipe(
+            finalize(() => this.loader.hide())
+          ).subscribe({
             next: () => {
               this.message.add({ severity: "success", detail: "Producto actualizado exitosamente" })
               this.refForm?.close();
@@ -122,7 +130,10 @@ export default class AdminProductosComponent implements OnInit, OnDestroy {
       message: 'Estas segur@ de eliminar el producto?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.productoService.eliminarProducto(product.id).subscribe({
+        this.loader.show()
+        this.productoService.eliminarProducto(product.id).pipe(
+          finalize(() => this.loader.hide())
+        ).subscribe({
           next: () => {
             this.message.add({ severity: 'success', detail: 'Producto eliminado', life: 3000 });
           },

@@ -6,6 +6,7 @@ import { authGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
 import { ROLES } from '../constants/role.const';
 import { Component } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({ template: '' })
@@ -17,6 +18,9 @@ describe('authGuard', () => {
   
   it('permite navegar al usuario al perfil si es de tipo CLIENTE', async () => {
     TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule
+      ],
       providers: [
         AuthService,
         provideRouter([
@@ -45,6 +49,9 @@ describe('authGuard', () => {
 
   it('Redirige al usuario al inicio si no tiene el rol adecuado', async () => {
     TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule
+      ],
       providers: [
         AuthService,
         provideRouter([
@@ -74,6 +81,9 @@ describe('authGuard', () => {
 
   it('Redirige al usuario al inicio si no tiene esta logeado', async () => {
     TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule
+      ],
       providers: [
         AuthService,
         provideRouter([

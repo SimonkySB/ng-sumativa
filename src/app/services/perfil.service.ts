@@ -1,32 +1,39 @@
 import { Injectable, inject } from '@angular/core';
-import { ApiService } from '../api/api.service';
 import { AuthService } from './auth.service';
 import { Perfil } from '../models/perfil.model';
+import { UserService } from './user.service';
+import { switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerfilService {
 
-  private apiService = inject(ApiService)
+  private userService = inject(UserService)
   private authService = inject(AuthService)
 
   constructor() { }
 
 
   actualizarPerfil(perfil: Perfil){
-    return this.apiService.actualizarPerfil({
+    return this.userService.actualizarPerfil({
       ...perfil,
       usuarioId: this.authService.usuario!.id
     })
   }
 
   obtenerPerfil(){
-    return this.apiService.obtenerPerfil(this.authService.usuario!.id)
+    
+    return this.authService.usuario$.pipe(
+      switchMap(user => {
+        return this.userService.obtenerPerfil(user?.id ?? 0)
+      })
+    )
+    
   }
 
   cambiarPassword(password: string){
-    return this.apiService.cambiarPassword(this.authService.usuario!.id, password)
+    return this.userService.cambiarPassword(this.authService.usuario!.id, password)
   }
 
 }

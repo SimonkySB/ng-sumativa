@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
@@ -11,6 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { UserService } from '../../services/user.service';
 import { Usuario } from '../../models/usuario.model';
+import { LoaderService } from '../../services/loader.service';
 
 
 export interface UsuarioTbl extends Usuario {
@@ -39,6 +40,7 @@ export default class AdminUsuariosComponent implements OnInit, OnDestroy {
   confirm = inject(ConfirmationService)
   dialogService = inject(DialogService)
   userSerivce = inject(UserService)
+  loader = inject(LoaderService)
 
   usuarios: UsuarioTbl[] = []
 
@@ -65,8 +67,11 @@ export default class AdminUsuariosComponent implements OnInit, OnDestroy {
       message: `Estas segur@ de ${user.activo ? "Desactivar": "Activar" } el usuario?`,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
+        this.loader.show()
         if(user.activo){
-          this.userSerivce.desactivarUsuario(user.id).subscribe({
+          this.userSerivce.desactivarUsuario(user.id).pipe(
+            finalize(() => this.loader.hide())
+          ).subscribe({
             next: () => {
               this.message.add({ severity: 'success', detail: 'Usuario Desactivado', life: 3000 });
             },
@@ -76,7 +81,9 @@ export default class AdminUsuariosComponent implements OnInit, OnDestroy {
           })
         }
         else {
-          this.userSerivce.activarUsuario(user.id).subscribe({
+          this.userSerivce.activarUsuario(user.id).pipe(
+            finalize(() => this.loader.hide())
+          ).subscribe({
             next: () => {
               this.message.add({ severity: 'success', detail: 'Usuario Activado', life: 3000 });
             },

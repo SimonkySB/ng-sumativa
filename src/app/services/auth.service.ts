@@ -2,12 +2,13 @@ import { Injectable, inject } from "@angular/core";
 import { Usuario } from "../models/usuario.model";
 import { BehaviorSubject, map, of, shareReplay, tap } from "rxjs";
 import { RegistrarseRequest } from "../models/registrarse-request.model";
-import { ApiService } from "../api/api.service";
+import { UserService } from "./user.service";
+
 
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-    private apiService = inject(ApiService)
+    private userService = inject(UserService)
 
     private _usuario = new BehaviorSubject<Usuario | null>(null)
 
@@ -20,7 +21,7 @@ export class AuthService {
     }
 
     login(email: string, password: string){
-        return this.apiService.login(email, password).pipe(
+        return this.userService.login(email, password).pipe(
             tap((usuario) => {
                 this.setUsuario(usuario)
                 this.cargarUsuario();
@@ -47,7 +48,7 @@ export class AuthService {
     }
 
     registrarse(registroData: RegistrarseRequest){
-        return this.apiService.crearUsuario(registroData)
+        return this.userService.crearUsuarioPublico(registroData)
     }
 
     logout(){

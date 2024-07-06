@@ -11,6 +11,8 @@ import { PasswordModule } from 'primeng/password';
 import { passwordMatch, passwordPattern, phonoContactoPattern } from '../../utils/form.utils';
 import { PerfilService } from '../../services/perfil.service';
 import { Perfil } from '../../models/perfil.model';
+import { finalize, take } from 'rxjs';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -32,6 +34,7 @@ export default class MiPerfilComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder)
   private msgService = inject(MessageService)
   private perfilService = inject(PerfilService)
+  private loader = inject(LoaderService)
 
   modoEdicion = false
 
@@ -81,8 +84,12 @@ export default class MiPerfilComponent implements OnInit {
 
   actualizarPerfil() {
     const values = this.form.getRawValue();
+    this.loader.show()
 
-    this.perfilService.actualizarPerfil(values).subscribe({
+    this.perfilService.actualizarPerfil(values).pipe(
+      take(1),
+      finalize(() => this.loader.hide())
+    ).subscribe({
       next: (perfil) => {
         this.perfil = perfil
         this.msgService.add({ severity: 'success', detail: 'Perfil actualizado' })
@@ -101,7 +108,11 @@ export default class MiPerfilComponent implements OnInit {
 
   cambiarPassword() {
     const values = this.passForm.getRawValue()
-    this.perfilService.cambiarPassword(values.password).subscribe({
+
+    this.loader.show()
+    this.perfilService.cambiarPassword(values.password).pipe(
+      finalize(() => this.loader.hide())
+    ).subscribe({
       next: () => {
         this.msgService.add({ severity: 'success', detail: 'Contraseña Actualizada exitosamente.' })
         this.passForm.reset();
