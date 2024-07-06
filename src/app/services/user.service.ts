@@ -72,7 +72,8 @@ export class UserService {
           email: registroData.email,
           password: registroData.password,
           roles: ['CLIENTE'],
-          telefono: registroData.telefono
+          telefono: registroData.telefono,
+          activo: true
         } as Usuario
         return user
       }),

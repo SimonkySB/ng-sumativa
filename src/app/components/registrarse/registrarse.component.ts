@@ -9,6 +9,8 @@ import { passwordMatch, passwordPattern, phonoContactoPattern } from '../../util
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { LoaderService } from '../../services/loader.service';
+import { finalize } from 'rxjs';
 
 
 @Component({
@@ -29,6 +31,7 @@ export class RegistrarseComponent{
   private authService = inject(AuthService)
   private messageService = inject(MessageService)
   private ref = inject(DynamicDialogRef)
+  private loader = inject(LoaderService)
 
   form = this.fb.group({
     email: ["", [Validators.required, Validators.email]],
@@ -48,14 +51,16 @@ export class RegistrarseComponent{
  
   registrarse() {
     const values = this.form.getRawValue()
-
+    this.loader.show()
     this.authService.registrarse({
       email: values.email, 
       password: values.password, 
       passwordRepeat: values.passwordRepeat, 
       telefono: values.telefono, 
       direccionDespacho: values.direccionDespacho, 
-    }).subscribe({
+    }).pipe(
+      finalize(() => this.loader.hide())
+    ).subscribe({
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Registro', detail: "Registro exitoso", life: 20000 })
         this.ref.close()
