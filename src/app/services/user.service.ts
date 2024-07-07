@@ -144,5 +144,13 @@ export class UserService {
     )
 
   }
+
+
+  eliminarUsuario(id: number){
+    const data = this._usuarios.value.filter(p => p.id !== id)
+    return this.storage.post<Usuario[]>(this.url, data).pipe(
+        switchMap(() => this.load())
+    )
+  }
   
 }

@@ -60,6 +60,28 @@ export default class AdminUsuariosComponent implements OnInit, OnDestroy {
     }
   }
 
+  onRowDelete(user: UsuarioTbl, event: MouseEvent){
+    this.confirm.confirm({
+      target: event.target as EventTarget,
+      message: 'Estas segur@ de eliminar el usuario?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.loader.show()
+        this.userSerivce.eliminarUsuario(user.id).pipe(
+          finalize(() => this.loader.hide())
+        ).subscribe({
+          next: () => {
+            this.message.add({ severity: 'success', detail: 'Usuario eliminado', life: 3000 });
+          },
+          error: (ex) => {
+            this.message.add({ severity: "error", detail: ex.message })
+          }
+        })
+      },
+      reject: () => { }
+    });
+  }
+
 
   onRowCambiarEstado(user: UsuarioTbl, event: MouseEvent) {
     this.confirm.confirm({

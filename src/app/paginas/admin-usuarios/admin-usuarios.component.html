@@ -41,6 +41,15 @@
                         pButton 
                         type="button" 
                         size="small"
+                        icon="pi pi-trash" 
+                        severity="danger"
+                        (click)="onRowDelete(user, $event)" 
+                        >
+                    </button>
+                    <button 
+                        pButton 
+                        type="button" 
+                        size="small"
                         [pTooltip]="user.activo ? 'Desactivar' : 'Activar'"
                         icon="pi pi-sync" 
                         [severity]="user.activo ? 'success' : 'danger'"
